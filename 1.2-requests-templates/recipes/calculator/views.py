@@ -7,8 +7,8 @@ DATA = {
         'соль, ч.л.': 0.5,
     },
     'pasta': {
-        'макароны, г': 0.3,
-        'сыр, г': 0.05,
+        'макароны, кг': 0.3,
+        'сыр, кг': 0.05,
     },
     'buter': {
         'хлеб, ломтик': 1,
@@ -17,6 +17,15 @@ DATA = {
         'помидор, ломтик': 1,
     },
     # можете добавить свои рецепты ;)
+    'cheesecake': {
+        'печенье, г': 200,
+        'сливочное масло, г': 120,
+        'крем-чиз, г': 170,
+        'жирные сливки 33%, мл': 250,
+        'сахарная пудра, г': 60,
+        'фисташковая паста, ст.л.': 2,
+        'фисташковая паста для верхнего слоя, г': 170,
+    },
 }
 
 # Напишите ваш обработчик. Используйте DATA как источник данных
@@ -28,3 +37,14 @@ DATA = {
 #     'ингредиент2': количество2,
 #   }
 # }
+
+def recipe(request, recipe_name):
+    ingredients = DATA.get(recipe_name)
+    servings = request.GET.get('servings', None)
+    if servings:
+        for ingredient in ingredients:
+            ingredients[ingredient] *= int(servings)
+    context = {
+        'recipe': ingredients
+    }
+    return render(request, 'calculator/index.html', context)
